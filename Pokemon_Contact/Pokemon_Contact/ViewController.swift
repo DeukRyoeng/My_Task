@@ -33,7 +33,8 @@ class ViewController: UIViewController {
 extension ViewController {
     private func configure() {
         tableView.rowHeight = 80
-
+        tableView.dataSource = self
+        tableView.delegate = self
         
     }
     private func addSubView() {
@@ -62,21 +63,20 @@ extension ViewController {
     }
 }
 
-extension ViewController: UITableViewDataSource {
+extension ViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ContactCellView.identifier, for: indexPath) as! ContactCellView
-//        cell.nameLabel.text = pokemon.name
-//        print("called - VC : \(pokemon)")
+        cell.image.image = UIImage(systemName: "person.circle")
+        cell.nameLabel.text = "Test Title"
         return cell
     }
 }
-
-extension ViewController: UITableViewDelegate {
+extension ViewController:UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
+            print("select \(indexPath.row)")
+        }
 }

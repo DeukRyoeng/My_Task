@@ -15,12 +15,8 @@ class ContactCellView:UITableViewCell {
     
     let image:UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "imageSP")
+        imageView.image = UIImage(systemName: "person")
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.borderWidth = 1
-        imageView.layer.cornerRadius = 35
-        imageView.layer.masksToBounds = true
-        imageView.layer.borderColor = UIColor.black.cgColor
         return  imageView
         
     }()
@@ -61,12 +57,12 @@ class ContactCellView:UITableViewCell {
     
     private func autoLayout() {
         image.snp.makeConstraints {
-            $0.size.width.height.equalTo(70)
-            $0.leading.equalToSuperview().inset(10)
+            $0.size.width.height.equalTo(80)
         }
         nameLabel.snp.makeConstraints {
             $0.leading.equalTo(image.snp.trailing).offset(30)
             $0.top.equalTo(30)
+            
         
         }
         numberLabel.snp.makeConstraints {
