@@ -20,13 +20,20 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("================================")
         print("called ViewController - Run App ")
+        print("================================")
         configure()
         addSubView()
         autoLayout()
         setupNavigation()
-        
-        self.tableView.reloadData()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("+++++=============================+++++")
+        print("called ViewController - ViewWillAppear ")
+        print("+++++=============================+++++")
+        tableView.reloadData()
     }
 }
 
@@ -48,6 +55,12 @@ extension ViewController {
     @objc func addBtnTapped() {
         let phoneBookVC = PhoneBookViewController()
         navigationController?.pushViewController(phoneBookVC, animated: true)
+
+    }
+    @objc func checkBtnTapped() {
+        print(DataManager.shared.pokemonList)
+        print(DataManager.shared.getPokemonCount())
+        tableView.reloadData()
     }
 }
 extension ViewController {
@@ -60,18 +73,25 @@ extension ViewController {
         let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addBtnTapped))
         addButton.tintColor = UIColor.gray
         navigationItem.rightBarButtonItem = addButton
+    
+        let checkButton = UIBarButtonItem(title: "체크", style: .plain, target: self, action: #selector(checkBtnTapped))
+        addButton.tintColor = UIColor.gray
+        navigationItem.leftBarButtonItem = checkButton
     }
+    
 }
 
 extension ViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return DataManager.shared.pokemonList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ContactCellView.identifier, for: indexPath) as! ContactCellView
+        let items = DataManager.shared.pokemonList
+        let pokemon = items[indexPath.row]
+        cell.nameLabel.text = pokemon.name
         cell.image.image = UIImage(systemName: "person.circle")
-        cell.nameLabel.text = "Test Title"
         return cell
     }
 }

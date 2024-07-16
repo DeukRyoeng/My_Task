@@ -10,17 +10,15 @@ import SnapKit
 import AnyFormatKit
 
 class PhoneBookViewController: UIViewController {
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubView()
         setupNavigation()
         view.backgroundColor = .white
-
-        
     }
-    
+        
     let image:UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "imageSP")
@@ -60,18 +58,46 @@ class PhoneBookViewController: UIViewController {
     }()
     
     @objc func randomBtnTapped(_ sender: UIButton) {
+        let random = Int.random(in: 1...1000)
+        DataManager.shared.fetchPokemonData(pokemonID: random) { result in
+            switch result {
+            case .success(let pokemon):
+                //UIupdate는 메인스레드에서 진행
+                DispatchQueue.main.async {
+                    DataManager.shared.addPokemon(pokemon)
+                    self.setImage(from: pokemon.sprites.frontDefault)
+                    self.nameField.text = pokemon.name
+                }
+            case .failure(let err):
+                print("ERROR!! - \(err)")
+            }
+        }
     }
     
     @objc func doneBtnTpped(_ snnder: UIButton) {
         print("적용 버튼")
-       
-        //self.navigationController?.popViewController(animated: true)
         
-
+        self.navigationController?.popViewController(animated: true)
+        
+        
     }
 }
 
 extension PhoneBookViewController {
+    private func setImage(from url: String) {
+        guard let imageURL = URL(string: url) else { return }
+        
+        DispatchQueue.global().async {
+            if let data = try? Data(contentsOf: imageURL) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self.image.image = image
+                    }
+                }
+            }
+        }
+    }
+    
     private func addSubView() {
         [randomButton, image, nameField, numberField].forEach({view.addSubview($0)})
         self.randomButton.addTarget(self, action: #selector(randomBtnTapped(_: )), for: .touchUpInside)
@@ -112,24 +138,4 @@ extension PhoneBookViewController {
     }
     
 }
-//
-//extension PhoneBookViewController: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        
-//        guard let text = numberField.text else {
-//            return false
-//        }
-//        let characterSet = CharacterSet(charactersIn: string)
-//        if CharacterSet.decimalDigits.isSuperset(of: characterSet) == false {
-//            return false
-//        }
-//        
-//        let formatter = DefaultTextInputFormatter(textPattern: "###-####-####")
-//        let result = formatter.formatInput(currentText: text, range: range, replacementString: string)
-//        textField.text = result.formattedText
-//        let position = textField.position(from: textField.beginningOfDocument, offset: result.caretBeginOffset)!
-//        textField.selectedTextRange = textField.textRange(from: position, to: position)
-//        return false
-//    }
-//}
-//
+
