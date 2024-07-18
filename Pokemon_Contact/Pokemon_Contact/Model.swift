@@ -35,7 +35,8 @@ struct PokeAPI: Codable {
         height = try container.decode(Int.self, forKey: .height)
         weight = try container.decode(Int.self, forKey: .weight)
         sprites = try container.decode(Sprites.self, forKey: .sprites)
-        number = ""
+        number = try container.decodeIfPresent(String.self, forKey: .number) ?? ""
+
     }
 }
 // MARK: - Sprites
@@ -45,12 +46,4 @@ struct Sprites: Codable {
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
     }
-}
-
-struct SavePokemon {
-    let id: Int
-    let name: String
-    var number: String
-    let height, weight: Int
-    let sprites: String
 }

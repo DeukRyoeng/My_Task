@@ -12,14 +12,15 @@ import AnyFormatKit
 class PhoneBookViewController: UIViewController {
     
     let dataManager = DataManager.shared
-    
     var pokemon_Name: String?
     var pokemon_Number: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubView()
         setupNavigation()
         view.backgroundColor = .white
+        numberField.delegate = self
     }
     
     
@@ -80,7 +81,7 @@ class PhoneBookViewController: UIViewController {
     }
     
     @objc func doneBtnTpped(_ snnder: UIButton) {
-        let number = numberField.text ?? "Not Data"
+        let number = numberField.text ?? ""
         guard let number = numberField.text, !number.isEmpty else {
             print("전화번호가 입력되지 않았습니다.")
             return
@@ -154,3 +155,23 @@ extension PhoneBookViewController {
     
 }
 
+//MARK: - 전화번호 형식으로 포맷
+extension PhoneBookViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        //NumberField에만 적용
+        guard let text = numberField.text else {
+            return false
+        }
+        let characterSet = CharacterSet(charactersIn: string)
+        if CharacterSet.decimalDigits.isSuperset(of: characterSet) == false {
+            return false
+        }
+
+        let formatter = DefaultTextInputFormatter(textPattern: "###-####-####")
+        let result = formatter.formatInput(currentText: text, range: range, replacementString: string)
+        textField.text = result.formattedText
+        let position = textField.position(from: textField.beginningOfDocument, offset: result.caretBeginOffset)!
+        textField.selectedTextRange = textField.textRange(from: position, to: position)
+        return false
+    }
+}
