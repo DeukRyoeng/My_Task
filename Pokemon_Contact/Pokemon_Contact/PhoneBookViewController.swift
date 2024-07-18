@@ -12,6 +12,10 @@ import AnyFormatKit
 class PhoneBookViewController: UIViewController {
     
     let dataManager = DataManager.shared
+    let state = DataManager.shared.state
+    //TableView에서 선택된 index값 저장
+    var pokemonIndex: Int?
+    var pokemon: PokeAPI?
     var pokemon_Name: String?
     var pokemon_Number: String?
     
@@ -21,6 +25,7 @@ class PhoneBookViewController: UIViewController {
         setupNavigation()
         view.backgroundColor = .white
         numberField.delegate = self
+        configureView()
     }
     
     
@@ -79,22 +84,33 @@ class PhoneBookViewController: UIViewController {
             }
         }
     }
-    
+//MARK: - 추가, 적용 버튼
     @objc func doneBtnTpped(_ snnder: UIButton) {
-        let number = numberField.text ?? ""
-        guard let number = numberField.text, !number.isEmpty else {
-            print("전화번호가 입력되지 않았습니다.")
-            return
-        }
-        self.pokemon_Number = number
-        let lastIndex = dataManager.getPokemonCount() - 1
-        if lastIndex >= 0, let name = self.pokemon_Name, let number = self.pokemon_Number {
-            dataManager.updatePokemonName(at: lastIndex, with: name)
-            dataManager.updatePokemonNumber(at: lastIndex, with: number)
+        if state {
+            // True 일때
+            guard let pokemonIndex = pokemonIndex,
+                  let upDateName = nameField.text,
+                  let upDateNumber = numberField.text  else { return }
+            
+            dataManager.updatePokemonName(at: pokemonIndex, with: upDateName)
+            dataManager.updatePokemonNumber(at: pokemonIndex, with: upDateNumber)
             dataManager.saveData()
-            print(dataManager.pokemonList)
+            
+        } else {
+            //false 일때
+            let number = numberField.text ?? ""
+            guard let number = numberField.text, !number.isEmpty else {
+                print("전화번호가 입력되지 않았습니다.")
+                return
+            }
+            self.pokemon_Number = number
+            let lastIndex = dataManager.getPokemonCount() - 1
+            if lastIndex >= 0, let name = self.pokemon_Name, let number = self.pokemon_Number {
+                dataManager.updatePokemonName(at: lastIndex, with: name)
+                dataManager.updatePokemonNumber(at: lastIndex, with: number)
+                dataManager.saveData()
+            }
         }
-        
         self.navigationController?.popViewController(animated: true)
     }
 }
@@ -102,7 +118,6 @@ class PhoneBookViewController: UIViewController {
 extension PhoneBookViewController {
     private func setImage(from url: String) {
         guard let imageURL = URL(string: url) else { return }
-        
         DispatchQueue.global().async {
             if let data = try? Data(contentsOf: imageURL) {
                 if let image = UIImage(data: data) {
@@ -141,16 +156,37 @@ extension PhoneBookViewController {
             $0.top.equalTo(nameField.snp.bottom).offset(10)
         }
     }
+//MARK: - 네이게이션 관련
     private func setupNavigation() {
         title = "연락처 추가"
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 20, weight: .bold),
             NSAttributedString.Key.foregroundColor : UIColor.black
         ]
-        let addButton = UIBarButtonItem(title: "적용", style: .plain, target: self, action: #selector(doneBtnTpped(_ :)))
+        //삼항 연사자로 짧게 단축
+        let titleLabel: String = state ? "적용" : "추가"
+        let addButton = UIBarButtonItem(title: titleLabel, style: .plain, target: self, action: #selector(doneBtnTpped(_ :)))
         addButton.tintColor = UIColor.gray
         navigationItem.rightBarButtonItem = addButton
         
+    }
+    
+//MARK: - UI Update 관련
+    private func configureView() {
+        guard let pokemon = pokemon else { return }
+        nameField.text = pokemon.name
+        numberField.text = pokemon.number
+        if let url = URL(string: pokemon.sprites.frontDefault) {
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: url) {
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.image.image = image
+                        }
+                    }
+                }
+            }
+        }
     }
     
 }
@@ -166,7 +202,7 @@ extension PhoneBookViewController: UITextFieldDelegate {
         if CharacterSet.decimalDigits.isSuperset(of: characterSet) == false {
             return false
         }
-
+        
         let formatter = DefaultTextInputFormatter(textPattern: "###-####-####")
         let result = formatter.formatInput(currentText: text, range: range, replacementString: string)
         textField.text = result.formattedText

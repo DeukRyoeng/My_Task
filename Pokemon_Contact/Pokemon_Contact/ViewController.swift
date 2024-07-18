@@ -16,7 +16,6 @@ class ViewController: UIViewController {
         tableView.register(ContactCellView.self, forCellReuseIdentifier: ContactCellView.identifier)
         return tableView
     }()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +26,13 @@ class ViewController: UIViewController {
         addSubView()
         autoLayout()
         setupNavigation()
+        DataManager.shared.sortPokemonListByName()
         DataManager.shared.loadData()
+        tableView.reloadData()
+//        저장했던 데이터 지우기
+//        let defaults = UserDefaults.standard
+//        defaults.removeObject(forKey: "pokemonList")
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -35,6 +40,8 @@ class ViewController: UIViewController {
         print("called ViewController - ViewWillAppear ")
         print("+++++=============================+++++")
         tableView.reloadData()
+        DataManager.shared.sortPokemonListByName()
+
     }
 }
 
@@ -70,6 +77,7 @@ extension ViewController {
         addButton.tintColor = UIColor.gray
         navigationItem.rightBarButtonItem = addButton
     }
+    
     private func setImage(from url: String, forCell cell: ContactCellView) {
             guard let imageURL = URL(string: url) else { return }
             
@@ -77,13 +85,12 @@ extension ViewController {
                 if let data = try? Data(contentsOf: imageURL) {
                     if let image = UIImage(data: data) {
                         DispatchQueue.main.async {
-                            cell.image.image = image
+                            cell.profileImageView.image = image
                         }
                     }
                 }
             }
         }
-    
 }
 
 extension ViewController:UITableViewDataSource {
@@ -94,7 +101,6 @@ extension ViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ContactCellView.identifier, for: indexPath) as! ContactCellView
         
-        
         let items = DataManager.shared.pokemonList
         let pokemon = items[indexPath.row]
         cell.nameLabel.text = pokemon.name
@@ -103,13 +109,19 @@ extension ViewController:UITableViewDataSource {
         if !pokemon.sprites.frontDefault.isEmpty {
             setImage(from: pokemon.sprites.frontDefault, forCell: cell)
         } else {
-            cell.image.image = UIImage(systemName: "person.circle")
+            cell.profileImageView.image = UIImage(systemName: "person.circle")
         }
         return cell
     }
 }
 extension ViewController:UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            print("select \(indexPath.row)")
-        }
+        DataManager.shared.state = true
+        let selectedCell = DataManager.shared.pokemonList[indexPath.row]
+        print("SelectedCell - \(selectedCell)")
+        let detailVC = PhoneBookViewController()
+        detailVC.pokemon = selectedCell
+        detailVC.pokemonIndex = indexPath.row
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
