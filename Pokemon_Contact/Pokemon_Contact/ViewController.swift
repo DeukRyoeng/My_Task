@@ -16,7 +16,6 @@ class ViewController: UIViewController {
         tableView.register(ContactCellView.self, forCellReuseIdentifier: ContactCellView.identifier)
         return tableView
     }()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +26,13 @@ class ViewController: UIViewController {
         addSubView()
         autoLayout()
         setupNavigation()
+        DataManager.shared.sortPokemonListByName()
         DataManager.shared.loadData()
+        tableView.reloadData()
+        //저장했던 데이터 지우기
+//        let defaults = UserDefaults.standard
+//        defaults.removeObject(forKey: "pokemonList")
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -35,6 +40,7 @@ class ViewController: UIViewController {
         print("called ViewController - ViewWillAppear ")
         print("+++++=============================+++++")
         tableView.reloadData()
+        DataManager.shared.sortPokemonListByName()
     }
 }
 
@@ -93,7 +99,6 @@ extension ViewController:UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ContactCellView.identifier, for: indexPath) as! ContactCellView
-        
         
         let items = DataManager.shared.pokemonList
         let pokemon = items[indexPath.row]

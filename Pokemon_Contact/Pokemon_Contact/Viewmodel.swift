@@ -25,31 +25,34 @@ class DataManager {
     func addPokemon(_ pokemon: PokeAPI) {
         pokemonList.append(pokemon)
     }
-    
+    //포켓몬의 이름 업데이트 메서드
     func updatePokemonName(at index: Int, with name: String) {
            guard index >= 0 && index < pokemonList.count else {
                print("인덱스가 범위를 벗어났습니다.")
                return
            }
-        pokemonList[index].name.append(name)
-       }
-    //포켓몬의 번호 업데이트 메서드 추가
+        pokemonList[index].name = name
+    }
+    //포켓몬의 번호 업데이트 메서드
 
        func updatePokemonNumber(at index: Int, with number: String) {
            guard index >= 0 && index < pokemonList.count else {
                print("인덱스가 범위를 벗어났습니다.")
                return
            }
-           pokemonList[index].number.append(number)
+           pokemonList[index].number = number
        }
+    // 이름순으로 포켓몬 리스트를 정렬하는 메서드 추가
+       func sortPokemonListByName() {
+           pokemonList.sort { $0.name < $1.name }
+           print(pokemonList)
+       }
+    
     //로컬에 저장 밑 불러오기
     func saveData() {
         do {
             let encodedData = try JSONEncoder().encode(pokemonList)
             UserDefaults.standard.set(encodedData, forKey: "pokemonList")
-            print("==================")
-            print(pokemonList)
-            print("==================")
         } catch {
             print("저장 중 에러 발생: \(error.localizedDescription)")
         }

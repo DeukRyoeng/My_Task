@@ -92,9 +92,7 @@ class PhoneBookViewController: UIViewController {
             dataManager.updatePokemonName(at: lastIndex, with: name)
             dataManager.updatePokemonNumber(at: lastIndex, with: number)
             dataManager.saveData()
-            print(dataManager.pokemonList)
         }
-        
         self.navigationController?.popViewController(animated: true)
     }
 }
