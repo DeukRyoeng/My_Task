@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A834B4FC2C46946B00546388 /* Viewmodel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A834B4FB2C46946B00546388 /* Viewmodel.swift */; };
 		A834B4FE2C46947600546388 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A834B4FD2C46947600546388 /* Model.swift */; };
+		A834B5012C4901A200546388 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = A834B5002C4901A200546388 /* AnyFormatKit */; };
 		A8FE8EFD2C3FA86600561699 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE8EFC2C3FA86600561699 /* AppDelegate.swift */; };
 		A8FE8EFF2C3FA86600561699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE8EFE2C3FA86600561699 /* SceneDelegate.swift */; };
 		A8FE8F012C3FA86600561699 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE8F002C3FA86600561699 /* ViewController.swift */; };
@@ -17,7 +18,6 @@
 		A8FE8F122C3FA92100561699 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A8FE8F112C3FA92100561699 /* SnapKit */; };
 		A8FE8F142C3FA9A500561699 /* ContactCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE8F132C3FA9A500561699 /* ContactCellView.swift */; };
 		A8FE8F162C410F7500561699 /* PhoneBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE8F152C410F7500561699 /* PhoneBookViewController.swift */; };
-		A8FE8F1B2C42225C00561699 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = A8FE8F1A2C42225C00561699 /* AnyFormatKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8FE8F122C3FA92100561699 /* SnapKit in Frameworks */,
-				A8FE8F1B2C42225C00561699 /* AnyFormatKit in Frameworks */,
+				A834B5012C4901A200546388 /* AnyFormatKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,13 +69,13 @@
 				A8FE8EFC2C3FA86600561699 /* AppDelegate.swift */,
 				A8FE8EFE2C3FA86600561699 /* SceneDelegate.swift */,
 				A8FE8F002C3FA86600561699 /* ViewController.swift */,
+				A8FE8F152C410F7500561699 /* PhoneBookViewController.swift */,
+				A8FE8F132C3FA9A500561699 /* ContactCellView.swift */,
 				A834B4FB2C46946B00546388 /* Viewmodel.swift */,
 				A834B4FD2C46947600546388 /* Model.swift */,
 				A8FE8F052C3FA86800561699 /* Assets.xcassets */,
 				A8FE8F072C3FA86800561699 /* LaunchScreen.storyboard */,
 				A8FE8F0A2C3FA86800561699 /* Info.plist */,
-				A8FE8F132C3FA9A500561699 /* ContactCellView.swift */,
-				A8FE8F152C410F7500561699 /* PhoneBookViewController.swift */,
 			);
 			path = Pokemon_Contact;
 			sourceTree = "<group>";
@@ -98,7 +98,7 @@
 			name = Pokemon_Contact;
 			packageProductDependencies = (
 				A8FE8F112C3FA92100561699 /* SnapKit */,
-				A8FE8F1A2C42225C00561699 /* AnyFormatKit */,
+				A834B5002C4901A200546388 /* AnyFormatKit */,
 			);
 			productName = Pokemon_Contact;
 			productReference = A8FE8EF92C3FA86600561699 /* Pokemon_Contact.app */;
@@ -130,7 +130,7 @@
 			mainGroup = A8FE8EF02C3FA86600561699;
 			packageReferences = (
 				A8FE8F102C3FA92100561699 /* XCRemoteSwiftPackageReference "SnapKit" */,
-				A8FE8F192C42225C00561699 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
+				A834B4FF2C4901A200546388 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
 			);
 			productRefGroup = A8FE8EFA2C3FA86600561699 /* Products */;
 			projectDirPath = "";
@@ -379,6 +379,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A834B4FF2C4901A200546388 /* XCRemoteSwiftPackageReference "AnyFormatKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/luximetr/AnyFormatKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.2;
+			};
+		};
 		A8FE8F102C3FA92100561699 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -387,26 +395,18 @@
 				minimumVersion = 5.7.1;
 			};
 		};
-		A8FE8F192C42225C00561699 /* XCRemoteSwiftPackageReference "AnyFormatKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/luximetr/AnyFormatKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A834B5002C4901A200546388 /* AnyFormatKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A834B4FF2C4901A200546388 /* XCRemoteSwiftPackageReference "AnyFormatKit" */;
+			productName = AnyFormatKit;
+		};
 		A8FE8F112C3FA92100561699 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A8FE8F102C3FA92100561699 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		A8FE8F1A2C42225C00561699 /* AnyFormatKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A8FE8F192C42225C00561699 /* XCRemoteSwiftPackageReference "AnyFormatKit" */;
-			productName = AnyFormatKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

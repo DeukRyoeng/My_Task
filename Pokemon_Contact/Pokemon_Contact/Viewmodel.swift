@@ -47,7 +47,9 @@ class DataManager {
         do {
             let encodedData = try JSONEncoder().encode(pokemonList)
             UserDefaults.standard.set(encodedData, forKey: "pokemonList")
-            print(encodedData)
+            print("==================")
+            print(pokemonList)
+            print("==================")
         } catch {
             print("저장 중 에러 발생: \(error.localizedDescription)")
         }
