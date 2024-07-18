@@ -11,8 +11,10 @@ import UIKit
 class DataManager {
     //싱글톤 패턴 전역변수로 선언
     static let shared = DataManager()
-    
     private init() {}
+    
+    //PhoneBookVC 가 어떤 상태인지 표시
+    var state = false
     
     //데이터를 담을 빈 배열 생성
     var pokemonList:[PokeAPI] = []
