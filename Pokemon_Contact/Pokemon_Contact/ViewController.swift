@@ -27,6 +27,7 @@ class ViewController: UIViewController {
         addSubView()
         autoLayout()
         setupNavigation()
+        DataManager.shared.loadData()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -57,11 +58,6 @@ extension ViewController {
         navigationController?.pushViewController(phoneBookVC, animated: true)
 
     }
-    @objc func checkBtnTapped() {
-        print(DataManager.shared.pokemonList)
-        print(DataManager.shared.getPokemonCount())
-        tableView.reloadData()
-    }
 }
 extension ViewController {
     private func setupNavigation() {
@@ -73,11 +69,20 @@ extension ViewController {
         let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addBtnTapped))
         addButton.tintColor = UIColor.gray
         navigationItem.rightBarButtonItem = addButton
-    
-        let checkButton = UIBarButtonItem(title: "체크", style: .plain, target: self, action: #selector(checkBtnTapped))
-        addButton.tintColor = UIColor.gray
-        navigationItem.leftBarButtonItem = checkButton
     }
+    private func setImage(from url: String, forCell cell: ContactCellView) {
+            guard let imageURL = URL(string: url) else { return }
+            
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: imageURL) {
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            cell.image.image = image
+                        }
+                    }
+                }
+            }
+        }
     
 }
 
@@ -88,10 +93,18 @@ extension ViewController:UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ContactCellView.identifier, for: indexPath) as! ContactCellView
+        
+        
         let items = DataManager.shared.pokemonList
         let pokemon = items[indexPath.row]
         cell.nameLabel.text = pokemon.name
-        cell.image.image = UIImage(systemName: "person.circle")
+        cell.numberLabel.text = pokemon.number
+        // 비어 있는지 체크
+        if !pokemon.sprites.frontDefault.isEmpty {
+            setImage(from: pokemon.sprites.frontDefault, forCell: cell)
+        } else {
+            cell.image.image = UIImage(systemName: "person.circle")
+        }
         return cell
     }
 }

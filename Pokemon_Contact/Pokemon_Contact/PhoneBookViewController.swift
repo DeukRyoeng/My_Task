@@ -11,14 +11,18 @@ import AnyFormatKit
 
 class PhoneBookViewController: UIViewController {
     
+    let dataManager = DataManager.shared
     
+    var pokemon_Name: String?
+    var pokemon_Number: String?
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubView()
         setupNavigation()
         view.backgroundColor = .white
     }
-        
+    
+    
     let image:UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "imageSP")
@@ -63,10 +67,11 @@ class PhoneBookViewController: UIViewController {
             switch result {
             case .success(let pokemon):
                 //UIupdate는 메인스레드에서 진행
-                DispatchQueue.main.async {
-                    DataManager.shared.addPokemon(pokemon)
+                DispatchQueue.main.async { [self] in
+                    dataManager.addPokemon(pokemon)
                     self.setImage(from: pokemon.sprites.frontDefault)
                     self.nameField.text = pokemon.name
+                    self.pokemon_Name = pokemon.name
                 }
             case .failure(let err):
                 print("ERROR!! - \(err)")
@@ -75,11 +80,21 @@ class PhoneBookViewController: UIViewController {
     }
     
     @objc func doneBtnTpped(_ snnder: UIButton) {
-        print("적용 버튼")
+        let number = numberField.text ?? "Not Data"
+        guard let number = numberField.text, !number.isEmpty else {
+            print("전화번호가 입력되지 않았습니다.")
+            return
+        }
+        self.pokemon_Number = number
+        let lastIndex = dataManager.getPokemonCount() - 1
+        if lastIndex >= 0, let name = self.pokemon_Name, let number = self.pokemon_Number {
+            dataManager.updatePokemonName(at: lastIndex, with: name)
+            dataManager.updatePokemonNumber(at: lastIndex, with: number)
+            dataManager.saveData()
+            print(dataManager.pokemonList)
+        }
         
         self.navigationController?.popViewController(animated: true)
-        
-        
     }
 }
 
