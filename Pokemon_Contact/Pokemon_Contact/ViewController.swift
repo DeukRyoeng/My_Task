@@ -26,7 +26,6 @@ class ViewController: UIViewController {
         addSubView()
         autoLayout()
         setupNavigation()
-        DataManager.shared.sortPokemonListByName()
         DataManager.shared.loadData()
         tableView.reloadData()
 //        저장했던 데이터 지우기

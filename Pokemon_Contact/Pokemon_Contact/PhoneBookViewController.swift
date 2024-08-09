@@ -13,12 +13,13 @@ class PhoneBookViewController: UIViewController {
     
     let dataManager = DataManager.shared
     let state = DataManager.shared.state
+    
     //TableView에서 선택된 index값 저장
     var pokemonIndex: Int?
     var pokemon: PokeAPI?
     var pokemon_Name: String?
     var pokemon_Number: String?
-    
+    var name: String?
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubView()
@@ -26,9 +27,9 @@ class PhoneBookViewController: UIViewController {
         view.backgroundColor = .white
         numberField.delegate = self
         configureView()
+        name = nameField.text ?? "연락처 추가"
+
     }
-    
-    
     let image:UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "imageSP")
@@ -112,7 +113,7 @@ class PhoneBookViewController: UIViewController {
             }
         }
         self.navigationController?.popViewController(animated: true)
-    }
+    }// done BTN
 }
 
 extension PhoneBookViewController {
@@ -158,14 +159,13 @@ extension PhoneBookViewController {
     }
 //MARK: - 네이게이션 관련
     private func setupNavigation() {
-        title = "연락처 추가"
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 20, weight: .bold),
             NSAttributedString.Key.foregroundColor : UIColor.black
         ]
         //삼항 연사자로 짧게 단축
         let titleLabel: String = state ? "적용" : "추가"
-        let addButton = UIBarButtonItem(title: titleLabel, style: .plain, target: self, action: #selector(doneBtnTpped(_ :)))
+        let addButton = UIBarButtonItem(title: "연락처 추가", style: .plain, target: self, action: #selector(doneBtnTpped(_ :)))
         addButton.tintColor = UIColor.gray
         navigationItem.rightBarButtonItem = addButton
         

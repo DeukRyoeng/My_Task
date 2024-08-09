@@ -36,7 +36,6 @@ class DataManager {
         pokemonList[index].name = name
     }
     //포켓몬의 번호 업데이트 메서드
-
        func updatePokemonNumber(at index: Int, with number: String) {
            guard index >= 0 && index < pokemonList.count else {
                print("인덱스가 범위를 벗어났습니다.")
@@ -72,7 +71,7 @@ class DataManager {
     func fetchPokemonData(pokemonID: Int, completion: @escaping (Result<PokeAPI, Error>) -> Void) {
         let urlString = "https://pokeapi.co/api/v2/pokemon/\(pokemonID)/"
         guard let url = URL(string: urlString) else {
-            print("Invalid URL")
+            print("잘못된 URL")
             return
         }
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
@@ -82,7 +81,7 @@ class DataManager {
             }
             
             guard let data = data else {
-                print("No data returned")
+                print("No data")
                 return
             }
             
